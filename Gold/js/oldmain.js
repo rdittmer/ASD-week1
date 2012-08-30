@@ -1,20 +1,17 @@
 $(document).bind('pageinit', function(){
-	var form = $( '#teeForm' );
+   var form = $('#teeForm');
    form.validate({
       invalidHandler: function(form, validator){},
       submitHandler: function(){
-        /* var data = $( ".teeForm" ).serializeArray();
-				localStorage.setItem( "teeForm", data );*/
-				storeData();
+         storeData();
       }
    });
 });
 
-//no longer needed due to jquery
-/*function ge( x ){
+function ge( x ){
 		var theElement = document.getElementById( x );
 		return theElement;
-	}*/
+	}
 
 function storeData( key )
 	{
@@ -26,23 +23,22 @@ function storeData( key )
 		{
 			id         = key;
 		}
-		//getSelectedRadio();
-		//var opts = getOptions();
+		getSelectedRadio();
+		var opts = getOptions();
 		var item       = {};
 		
-		item.Options           = ["Course:"  ,                $( '#Options' ).val()];
-		item.reservist          = ["Reservist:"     ,          $( '#reservist' ).val()];
-		item.numberGames = ["Number of Games:" , $( '#numberGames' ).val()];
-		item.location           = ["Location:"   ,             $( 'input[name=location]:checked', '#teeForm' ).val()];
-		item.date                = ["Date:"   ,       			   $( '#date' ).val()];
-		item.notes              = ["Notes"       ,              $( '#notes' ).val()];
+		item.Options           = ["Course:"  ,                opts];
+		item.reservist          = ["Reservist:"     ,          ge( 'reservist' ).value];
+		item.numberGames = ["Number of Games:" , ge( 'numberGames' ).value];
+		item.location           = ["Location:"   ,             locationValue];
+		item.date                = ["Date:"   ,       			   ge( 'date' ).value];
+		item.notes              = ["Notes"       ,              ge( 'notes' ).value];
 		
 		localStorage.setItem( id, JSON.stringify( item ) );
 		alert( "Tee Time Added!" );
 	}
 	
-	// No longer needed due to jquery
-	/*function getSelectedRadio()
+	function getSelectedRadio()
 	{
 		var radios = document.forms[0].location;
 		
@@ -61,7 +57,7 @@ function storeData( key )
     		  };
    		};
   		 return optionValue;
-	};*/
+	};
 	
 	function getData()
 	{
@@ -71,41 +67,32 @@ function storeData( key )
 			alert( "You currently have no saved Tee Times. Auto add default Tee Times." );
 			autoFillData();
 		}
-		
-		$( '#addItemContent' ).append( '<div id="items" /> ' );
-		//var makeDiv  = document.createElement( 'div' );
-		//makeDiv.setAttribute( "id", "items" );
-		$( '#items' ).append( '<ul id="makeList" /> ' );
-		//var makeList = document.createElement( 'ul' );
-		//makeDiv.appendChild( makeList );
-		//document.body.appendChild( makeDiv );
-		//ge( 'items' ).style.display = "block";
+		var makeDiv  = document.createElement( 'div' );
+		makeDiv.setAttribute( "id", "items" );
+		var makeList = document.createElement( 'ul' );
+		makeDiv.appendChild( makeList );
+		document.body.appendChild( makeDiv );
+		ge( 'items' ).style.display = "block";
 		for( var i = 0, len = localStorage.length; i < len; i++ )
 		{
-			$( '#makeList' ).append( '<li /> ' );
-			//var makeli      = document.createElement( 'li' );
-			///////////////////////////////////////////////////////////////////////////////var linksLi     = document.createElement( 'li' );
-			//makeList.appendChild( makeli );
+			var makeli      = document.createElement( 'li' );
+			var linksLi     = document.createElement( 'li' );
+			makeList.appendChild( makeli );
 			var key         = localStorage.key( i );
 			var value       = localStorage.getItem( key );
 			var obj         = JSON.parse( value );
-			$( '#makeList li' ).last().append( '<ul id="makeSubList" /> ' );
- 			//var makeSubList = document.createElement( 'ul' );
-			//makeli.appendChild( makeSubList );
+			var makeSubList = document.createElement( 'ul' );
+			makeli.appendChild( makeSubList );
 			//getImage( obj.Options[1], makeSubList );
 			for( var n in obj )
 			{
-				$( '#makeSubList' ).append( '<li />' );
-				//var makeSubli       = document.createElement( 'li' );
-				//makeSubList.appendChild( makeSubli );
+				var makeSubli       = document.createElement( 'li' );
+				makeSubList.appendChild( makeSubli );
 				var optSubText      = obj[n][0] + " " + obj[n][1];
-				$( '#makeSubList li' ).last().append( optSubText );
-				//makeSubli.innerHTML = optSubText;
-				$( '#li' ).last().append( '<li id="linksLi" /> ' );
-				//makeSubList.appendChild( linksLi );
+				makeSubli.innerHTML = optSubText;
+				makeSubList.appendChild( linksLi );
 			} 
-			makeItemLinks( localStorage.key( i ), $( '#linksLi' ) );
-			//$('#additem').page.refresh();
+			makeItemLinks( localStorage.key( i ), linksLi );
 		}
 	}
 	
@@ -125,20 +112,20 @@ function storeData( key )
 		editLink.href        = "#";
 		editLink.key         = key;
 		var editText         = "Edit Tee Times";
-		$( '#editLink').on( "click", editItem );
-		$( '#editLink' ).html( "editText" );
-		$( '#linksLi' ).append( "editLink" );
+		editLink.addEventListener( "click", editItem );
+		editLink.innerHTML   = editText;
+		linksLi.appendChild( editLink );
 		
 		var breakTag         = document.createElement( 'br' );
-		$( '#linksLi' ).append( "breakTag" );
+		linksLi.appendChild( breakTag );
 		
 		var deleteLink       = document.createElement( 'n' );
 		deleteLink.href      = "#";
 		deleteLink.key       = key;
 		var deleteText       = "Delete Tee Time";
-		$( '#deleteLink' ).on( "click", deleteItem );
-		$( '#deleteLink' ).html( "deleteText" );
-		$( '#linksLi' ).append( "deleteLink" );
+		deleteLink.addEventListener( "click", deleteItem );
+		deleteLink.innerHTML = deleteText;
+		linksLi.appendChild( deleteLink );
 	}
 	
 	function editItem()
@@ -148,9 +135,9 @@ function storeData( key )
 		
 		toggleControls( "off" );
 		
-		$( '#Options' ).val( item.Options[1] );
-		$( '#reservist' ).val( item.reservist[1] );
-		$( '#numberGames' ).val( item.numberGames[1] );
+		ge( 'Options' ).value = item.Options[1];
+		ge( 'reservist' ).value     = item.reservist[1];
+		ge( 'numberGames' ).value = item.numberGames[1];
 		var radios = document.forms[0].location;
 		for ( var i = 0; i < radios.length; i++ )
 		{
@@ -161,11 +148,14 @@ function storeData( key )
 			else if ( radios[i].value == "All 18" && item.location[1] == "All 18" )
 				radios[i].setAttribute( "checked", "checked" );
 		}
-		$( '#gameDate' ).val( item.date[1] );
-		$( '#notes' ).val( item.notes[1] );
+		ge( 'gameDate' ).value       = item.date[1];
+		ge( 'notes' ).value     = item.notes[1];
 		
-		thiskey         = this.key;
-		$( '#submit' ).on( 'click', storeData( thiskey ) );
+		save.removeEventListener( "click", storeData );
+		ge( 'submit' ).value    = "Edit Tee Time";
+		var editSubmit         = ge( 'submit' );
+		editSubmit.addEventListener( "click" );
+		editSubmit.key         = this.key;
 	}
 	
 	function deleteItem()
@@ -179,7 +169,7 @@ function storeData( key )
 		}
 		else
 		{
-			alert( "Tee Time not deleted." );
+			alert( "Tee Timel not deleted." );
 		}
 	}
 	
@@ -188,18 +178,18 @@ function storeData( key )
 		switch( n )
 		{
 			case "on":
-				$( '#teeForm' ).toggle( "hide" );
-				//$( '#clearData' ).toggle( "show" );
-				$( '#displayData' ).toggle( "hide" );
-				$( '#addNew' ).removeClass( "ui-disabled" );
+				ge('teeForm').style.display      = "none";
+				ge('clear').style.display           = "inline";
+				ge('displayData').style.display = "none";
+				ge('addNew').style.display       = "inline";
 				break;
 				
 			case "off":
-				$( '#teeForm' ).toggle( "show" );
-				//$( '#clearData' ).toggle( "show" );
-				$( '#displayData' ).toggle( "show" );
-				$( '#addNew' ).addClass( "ui-disabled" );
-				$( '#items' ).toggle( "hide" );
+				ge('teeForm').style.display       = "block";
+				ge('clear').style.display            = "inline";
+				ge('displayData').style.display  = "inline";
+				ge('addNew').style.display        = "none";
+				ge('items').style.display           = "none";
 				break;
 				
 			default:
@@ -218,17 +208,13 @@ function storeData( key )
 		}
 	}
 	
-	function windowReload(){
-		window.location.reload();
-		return false;
-	}
-	
 	var locationValue;
 	//var errMessage = ge( 'errors' );
 	//makeOptions();
 	
-	$( '#displayData' ).on( 'click', getData );
-	$( '#clearData'    ).on( 'click', clearLocal );
-	$( '#addNew'      ).on( 'click', windowReload );
+	//var displayLink = ge( 'displayData' );
+	//displayLink.addEventListener( "click", getData );
+	//var clearLink   = ge( 'clear' );
+	//clearLink.addEventListener( "click", clearLocal );
 	//var save        = ge( 'submit' );
 	//save.addEventListener( "click", validate );
