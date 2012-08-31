@@ -38,7 +38,7 @@ var getData = function(){
 			autoFillData();
 		}
 		//NEW
-		$( '#showData' ).append( '<div id="items" /> ' );
+		/*$( '#showData' ).append( '<div id="items" /> ' );
 		$( '#items' ).append( '<ul id="makeList" /> ' );
 		for( var i = 0, len = localStorage.length; i < len; i++ )
 		{
@@ -54,11 +54,11 @@ var getData = function(){
 				$( '#makeSubList li' ).last().append( optSubText );
 				$( '#li' ).last().append( '<li id="linksLi" /> ' );
 			} 
-			makeItemLinks( localStorage.key( i ), $('linksLi') );
-		}
+			//makeItemLinks( localStorage.key( i ), $('linksLi') );
+		}*/
 		
 		//OLD
-		/*var makeDiv  = document.createElement( 'div' );
+		var makeDiv  = document.createElement( 'div' );
 		makeDiv.setAttribute( "id", "items" );
 		var makeList = document.createElement( 'ul' );
 		makeDiv.appendChild( makeList );
@@ -85,7 +85,7 @@ var getData = function(){
 				makeSubList.appendChild( linksLi );
 			} 
 			makeItemLinks( localStorage.key( i ), linksLi );
-		}*/
+		}
 };
 
 var storeData = function( key ){
@@ -188,7 +188,8 @@ var editItem = function()
 	
 function makeItemLinks( key, linksLi )
 	{
-		var editLink         = document.createElement( 'n' );
+		//NEW
+		/*var editLink         = document.createElement( 'n' );
 		editLink.href        = "#";
 		editLink.key         = key;
 		var editText         = "Edit Tee Times";
@@ -205,5 +206,25 @@ function makeItemLinks( key, linksLi )
 		var deleteText       = "Delete Tee Time";
 		$( '#deleteLink' ).on( "click", deleteItem );
 		$( '#deleteLink' ).html( "deleteText" );
-		$( '#linksLi' ).append( "deleteLink" );
+		$( '#linksLi' ).append( "deleteLink" );*/
+		
+		//OLD
+		var editLink         = document.createElement( 'n' );
+		editLink.href        = "#";
+		editLink.key         = key;
+		var editText         = "Edit Tee Time";
+		editLink.addEventListener( "click", editItem );
+		editLink.innerHTML   = editText;
+		linksLi.appendChild( editLink );
+		
+		var breakTag         = document.createElement( 'br' );
+		linksLi.appendChild( breakTag );
+		
+		var deleteLink       = document.createElement( 'n' );
+		deleteLink.href      = "#";
+		deleteLink.key       = key;
+		var deleteText       = "Delete Tee Time";
+		deleteLink.addEventListener( "click", deleteItem );
+		deleteLink.innerHTML = deleteText;
+		linksLi.appendChild( deleteLink );
 	}
